@@ -2,8 +2,12 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .venv/
+package/
+function.zip
 
 terraform/.terraform/
+terraform/.terraform.lock.hcl
 terraform/*.zip
 terraform/*.tfstate
 terraform/*.tfstate.*
+terraform/*.tfvars

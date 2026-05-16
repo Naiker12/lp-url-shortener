@@ -79,10 +79,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
           "dynamodb:GetItem",
           "dynamodb:PutItem"
         ]
-        Resource = [
-          aws_dynamodb_table.urls.arn,
-          aws_dynamodb_table.url_stats.arn
-        ]
+        Resource = aws_dynamodb_table.urls.arn
       }
     ]
   })
@@ -109,6 +106,14 @@ resource "aws_lambda_function" "shortener" {
 resource "aws_apigatewayv2_api" "http_api" {
   name          = "${local.resource_prefix}-api"
   protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_headers  = ["Content-Type"]
+    allow_methods  = ["GET", "POST", "OPTIONS"]
+    allow_origins  = ["*"]
+    expose_headers = ["Location"]
+    max_age        = 300
+  }
 }
 
 resource "aws_apigatewayv2_integration" "shortener" {
@@ -151,4 +156,9 @@ output "api_gateway_id" {
 output "lambda_function_name" {
   description = "Lambda function name."
   value       = aws_lambda_function.shortener.function_name
+}
+
+output "stats_table_name" {
+  description = "DynamoDB table name used for daily statistics."
+  value       = aws_dynamodb_table.url_stats.name
 }

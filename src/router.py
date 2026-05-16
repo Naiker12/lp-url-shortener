@@ -10,8 +10,21 @@ def route(event):
     if method == "POST":
         return ShortenerService().shorten(event)
 
+    if method == "OPTIONS":
+        return {
+            "statusCode": HTTPStatus.NO_CONTENT,
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "POST,OPTIONS",
+            },
+        }
+
     return {
         "statusCode": HTTPStatus.METHOD_NOT_ALLOWED,
-        "headers": {"Content-Type": "application/json"},
+        "headers": {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+        },
         "body": json.dumps({"message": "Method not allowed"}),
     }
