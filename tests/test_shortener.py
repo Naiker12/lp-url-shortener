@@ -10,6 +10,9 @@ sys.path.append(str(Path(__file__).resolve().parents[1] / "src"))
 from services.shortener_service import ShortenerService
 
 
+EXAMPLE_ORIGINAL_URL = "https://youtu.be/xFrGuyw1V8s?si=Biwdg-LYqohj05Px"
+
+
 def build_event(url: str, method: str = "POST") -> dict:
     return {
         "httpMethod": method,
@@ -28,19 +31,19 @@ class ShortenerServiceTest(unittest.TestCase):
 
         with patch("services.shortener_service.secrets.choice", side_effect=list("abc123")):
             service = ShortenerService(repository=repository, base_url="https://sho.rt")
-            response = service.shorten(build_event("https://example.com/articles?id=42"))
+            response = service.shorten(build_event(EXAMPLE_ORIGINAL_URL))
 
         body = parse_body(response)
 
         self.assertEqual(response["statusCode"], 201)
         self.assertEqual(body["code"], "abc123")
         self.assertEqual(body["short_url"], "https://sho.rt/abc123")
-        self.assertEqual(body["url_original"], "https://example.com/articles?id=42")
+        self.assertEqual(body["url_original"], EXAMPLE_ORIGINAL_URL)
         repository.save.assert_called_once()
 
         saved_record = repository.save.call_args.args[0]
         self.assertEqual(saved_record.codigo, "abc123")
-        self.assertEqual(saved_record.url_original, "https://example.com/articles?id=42")
+        self.assertEqual(saved_record.url_original, EXAMPLE_ORIGINAL_URL)
         self.assertEqual(saved_record.clicks, 0)
 
     def test_invalid_url_returns_bad_request_and_does_not_save(self):
@@ -61,7 +64,7 @@ class ShortenerServiceTest(unittest.TestCase):
         choices = list("ABC123XYZ789")
         with patch("services.shortener_service.secrets.choice", side_effect=choices):
             service = ShortenerService(repository=repository, base_url="https://sho.rt")
-            response = service.shorten(build_event("https://example.com"))
+            response = service.shorten(build_event(EXAMPLE_ORIGINAL_URL))
 
         body = parse_body(response)
 
@@ -83,7 +86,7 @@ class ShortenerServiceTest(unittest.TestCase):
         repository = UrlRepository(table_name="urls", dynamodb_resource=dynamodb)
         record = UrlRecord(
             codigo="abc123",
-            url_original="https://example.com",
+            url_original=EXAMPLE_ORIGINAL_URL,
             created_at="2026-05-16T00:00:00+00:00",
         )
 
@@ -102,7 +105,7 @@ class ShortenerServiceTest(unittest.TestCase):
         with patch.dict(os.environ, {"BASE_URL": "https://env.example"}, clear=False):
             with patch("services.shortener_service.secrets.choice", side_effect=list("env001")):
                 service = ShortenerService(repository=repository)
-                response = service.shorten(build_event("https://example.com"))
+                response = service.shorten(build_event(EXAMPLE_ORIGINAL_URL))
 
         self.assertEqual(parse_body(response)["short_url"], "https://env.example/env001")
 
