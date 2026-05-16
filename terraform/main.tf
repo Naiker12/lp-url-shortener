@@ -22,9 +22,15 @@ resource "aws_dynamodb_table" "url_stats" {
   name         = "${local.resource_prefix}-url-stats"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "codigo"
+  range_key    = "fecha"
 
   attribute {
     name = "codigo"
+    type = "S"
+  }
+
+  attribute {
+    name = "fecha"
     type = "S"
   }
 
@@ -135,6 +141,11 @@ resource "aws_lambda_permission" "allow_api_gateway" {
 output "api_endpoint" {
   description = "HTTP API endpoint."
   value       = aws_apigatewayv2_api.http_api.api_endpoint
+}
+
+output "api_gateway_id" {
+  description = "HTTP API id used by other modules."
+  value       = aws_apigatewayv2_api.http_api.id
 }
 
 output "lambda_function_name" {
