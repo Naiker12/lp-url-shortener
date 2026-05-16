@@ -91,7 +91,7 @@ class ShortenerService:
     @staticmethod
     def _response(status_code: HTTPStatus, payload: dict) -> dict:
         return {
-            "statusCode": status_code,
+            "statusCode": int(status_code),
             "headers": {"Content-Type": "application/json"},
             "body": json.dumps(payload),
         }

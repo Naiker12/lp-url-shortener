@@ -89,12 +89,13 @@ resource "aws_lambda_function" "shortener" {
   runtime          = "python3.12"
   filename         = data.archive_file.lambda_zip.output_path
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+  memory_size      = 256
+  timeout          = 10
 
   environment {
     variables = {
       DYNAMODB_TABLE = aws_dynamodb_table.urls.name
       BASE_URL       = var.base_url
-      AWS_REGION     = var.aws_region
     }
   }
 }
@@ -134,4 +135,9 @@ resource "aws_lambda_permission" "allow_api_gateway" {
 output "api_endpoint" {
   description = "HTTP API endpoint."
   value       = aws_apigatewayv2_api.http_api.api_endpoint
+}
+
+output "lambda_function_name" {
+  description = "Lambda function name."
+  value       = aws_lambda_function.shortener.function_name
 }

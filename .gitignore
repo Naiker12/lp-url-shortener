@@ -4,7 +4,6 @@ __pycache__/
 .venv/
 
 terraform/.terraform/
-terraform/.terraform.lock.hcl
-terraform/build/
+terraform/*.zip
 terraform/*.tfstate
 terraform/*.tfstate.*

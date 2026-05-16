@@ -24,7 +24,7 @@ Respuesta exitosa:
 }
 ```
 
-## Desarrollo local
+## Validar antes de deploy
 
 ```powershell
 python -m venv .venv
@@ -37,10 +37,31 @@ python -m unittest discover tests
 ## Deploy
 
 ```bash
-cd terraform
+terraform validate
 terraform init
-terraform plan -var="base_url=https://miweb.com"
-terraform apply -var="base_url=https://miweb.com"
+terraform plan
+terraform apply
+terraform destroy
+terraform output api_endpoint
+```
+
+Antes de aplicar, edita `terraform.tfvars` y ajusta `base_url` con el dominio publico que quieres usar para construir `short_url`.
+
+## Probar en Postman online
+
+Usa el valor de `api_endpoint` que entrega Terraform y agrega `/shorten`.
+
+- Collection: `LP URL Shortener`
+- Request: `POST Shorten URL`
+- Method: `POST`
+- URL: `https://TU_API_GATEWAY/shorten`
+- Header: `Content-Type: application/json`
+- Body raw JSON:
+
+```json
+{
+  "url": "https://youtu.be/xFrGuyw1V8s?si=Biwdg-LYqohj05Px"
+}
 ```
 
 Terraform crea:
@@ -55,4 +76,3 @@ Terraform crea:
 
 - `DYNAMODB_TABLE`: tabla DynamoDB usada por el repositorio.
 - `BASE_URL`: base publica para construir `short_url`.
-- `AWS_REGION`: region AWS.
