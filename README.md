@@ -10,7 +10,7 @@ Body:
 
 ```json
 {
-  "url": "https://youtu.be/xFrGuyw1V8s?si=Biwdg-LYqohj05Px"
+  "url": "<URL_LARGA>"
 }
 ```
 
@@ -18,9 +18,9 @@ Respuesta exitosa:
 
 ```json
 {
-  "code": "abc123",
-  "short_url": "https://miweb.com/abc123",
-  "url_original": "https://youtu.be/xFrGuyw1V8s?si=Biwdg-LYqohj05Px"
+  "code": "<CODIGO>",
+  "short_url": "<URL_CORTA>",
+  "url_original": "<URL_LARGA>"
 }
 ```
 
@@ -30,7 +30,7 @@ Respuesta exitosa:
 python -m venv .venv
 pip install -r requirements.txt
 $env:DYNAMODB_TABLE="urls"
-$env:BASE_URL="https://miweb.com"
+$env:BASE_URL="<URL_PUBLICA>"
 python -m unittest discover tests
 ```
 
@@ -60,7 +60,7 @@ Usa el valor de `api_endpoint` que entrega Terraform y agrega `/shorten`.
 
 ```json
 {
-  "url": "https://youtu.be/xFrGuyw1V8s?si=Biwdg-LYqohj05Px"
+  "url": "<URL_LARGA>"
 }
 ```
 
