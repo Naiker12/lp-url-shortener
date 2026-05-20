@@ -4,6 +4,8 @@ __pycache__/
 .venv/
 package/
 function.zip
+.env
+!.env.example
 
 terraform/.terraform/
 terraform/.terraform.lock.hcl
